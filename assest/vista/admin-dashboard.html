@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - Sushi Express</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sushi Express - Panel de Administrador</h1>
+            <div class="user-info">
+                <span id="adminName">Administrador</span>
+                <button id="logoutBtn" class="btn small">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="dashboard admin-dashboard">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="salesSummary">Resumen de Ventas</button>
+                <button class="tab-btn" data-tab="userActivity">Actividad de Usuarios</button>
+                <button class="tab-btn" data-tab="manageUsers">Gestionar Usuarios</button>
+            </div>
+
+            <div id="salesSummary" class="tab-content active">
+                <h2>Resumen de Ventas</h2>
+                
+                <div class="date-filter">
+                    <label for="dateRange">Filtrar por fecha:</label>
+                    <select id="dateRange">
+                        <option value="today">Hoy</option>
+                        <option value="yesterday">Ayer</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mes</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                    <div id="customDateRange" class="custom-date-range">
+                        <input type="date" id="startDate">
+                        <span>hasta</span>
+                        <input type="date" id="endDate">
+                        <button id="applyDateFilter" class="btn small">Aplicar</button>
+                    </div>
+                </div>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>Total de Ventas</h3>
+                        <p id="totalSales">$0.00</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Pedidos Completados</h3>
+                        <p id="completedOrders">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Propinas Recibidas</h3>
+                        <p id="totalTips">$0.00</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Promedio por Pedido</h3>
+                        <p id="averageOrder">$0.00</p>
+                    </div>
+                </div>
+                
+                <div class="sales-chart-container">
+                    <h3>Ventas por Día</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+                
+                <div class="popular-items">
+                    <h3>Productos Más Vendidos</h3>
+                    <table id="popularItemsTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los productos más vendidos se agregarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="userActivity" class="tab-content">
+                <h2>Actividad de Usuarios</h2>
+                
+                <div class="date-filter">
+                    <label for="activityDateRange">Filtrar por fecha:</label>
+                    <select id="activityDateRange">
+                        <option value="today">Hoy</option>
+                        <option value="yesterday">Ayer</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mes</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                    <div id="activityCustomDateRange" class="custom-date-range">
+                        <input type="date" id="activityStartDate">
+                        <span>hasta</span>
+                        <input type="date" id="activityEndDate">
+                        <button id="applyActivityDateFilter" class="btn small">Aplicar</button>
+                    </div>
+                </div>
+                
+                <div class="user-activity-table">
+                    <table id="userActivityTable">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Correo</th>
+                                <th>Último Acceso</th>
+                                <th>Pedidos Realizados</th>
+                                <th>Total Gastado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- La actividad de usuarios se agregará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="manageUsers" class="tab-content">
+                <h2>Gestionar Usuarios</h2>
+                
+                <div class="user-management">
+                    <div class="user-filter">
+                        <input type="text" id="userSearchInput" placeholder="Buscar usuario...">
+                        <select id="userRoleFilter">
+                            <option value="all">Todos los roles</option>
+                            <option value="user">Clientes</option>
+                            <option value="vendor">Vendedores</option>
+                            <option value="admin">Administradores</option>
+                        </select>
+                    </div>
+                    
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Fecha de Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los usuarios se agregarán dinámicamente -->
+                        </tbody>
+                    </table>
+                    
+                    <button id="addUserBtn" class="btn primary">Agregar Usuario</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="userFormModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="userFormTitle">Agregar Usuario</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="userName">Nombre Completo</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Correo Electrónico</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPhone">Número Telefónico</label>
+                    <input type="tel" id="userPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="userAddress">Dirección</label>
+                    <textarea id="userAddress" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Rol</label>
+                    <select id="userRole" required>
+                        <option value="user">Cliente</option>
+                        <option value="vendor">Vendedor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Contraseña</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Vendedor - Sushi Express</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sushi Express - Panel de Vendedor</h1>
+            <div class="user-info">
+                <span id="vendorName">Vendedor</span>
+                <button id="logoutBtn" class="btn small">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="dashboard vendor-dashboard">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="newOrders">Pedidos Nuevos</button>
+                <button class="tab-btn" data-tab="inProgress">En Preparación</button>
+                <button class="tab-btn" data-tab="completed">Completados</button>
+            </div>
+
+            <div id="newOrders" class="tab-content active">
+                <h2>Pedidos Nuevos</h2>
+                <div class="orders-container" id="newOrdersContainer">
+                    <!-- Los pedidos nuevos se agregarán dinámicamente -->
+                </div>
+            </div>
+
+            <div id="inProgress" class="tab-content">
+                <h2>Pedidos en Preparación</h2>
+                <div class="orders-container" id="inProgressContainer">
+                    <!-- Los pedidos en preparación se agregarán dinámicamente -->
+                </div>
+            </div>
+
+            <div id="completed" class="tab-content">
+                <h2>Pedidos Completados</h2>
+                <div class="orders-container" id="completedContainer">
+                    <!-- Los pedidos completados se agregarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderDetails" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detalles del Pedido</h2>
+            <div id="orderDetailsContent">
+                <!-- Los detalles del pedido se agregarán dinámicamente -->
+            </div>
+            <div class="order-actions">
+                <button id="startPreparingBtn" class="btn primary">Iniciar Preparación</button>
+                <button id="completeOrderBtn" class="btn primary">Marcar como Completado</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="vendor-dashboard.js"></script>
+</body>
+</html>
