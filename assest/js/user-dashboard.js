@@ -1,265 +1,271 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si el usuario está logueado
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser) {
-        window.location.href = 'index.html';
-        return;
-    }
-    
-    // Mostrar nombre del usuario
-    document.getElementById('userName').textContent = currentUser.name;
-    
-    // Evento para cerrar sesión
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
-    });
-    
-    // Inicializar carrito
-    let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-    
-    // Actualizar carrito en la interfaz
-    updateCartUI();
-    
-    // Eventos para los botones de agregar al carrito
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            const menuItem = this.closest('.menu-item');
-            const itemId = parseInt(menuItem.dataset.id);
-            const itemName = menuItem.querySelector('h4').textContent;
-            const itemPrice = parseFloat(menuItem.dataset.price);
-            
-            // Agregar item al carrito
-            addToCart(itemId, itemName, itemPrice);
-        });
-    });
-    
-    // Eventos para los botones de cantidad
-    document.querySelectorAll('.quantity-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const menuItem = this.closest('.menu-item');
-            const itemId = parseInt(menuItem.dataset.id);
-            const quantityElement = this.closest('.quantity-control').querySelector('.quantity');
-            let quantity = parseInt(quantityElement.textContent);
-            
-            if (this.classList.contains('plus')) {
-                quantity++;
-            } else if (this.classList.contains('minus') && quantity > 0) {
-                quantity--;
-            }
-            
-            quantityElement.textContent = quantity;
-            
-            // Si la cantidad es mayor que 0, actualizar el carrito
-            if (quantity > 0) {
-                const itemName = menuItem.querySelector('h4').textContent;
-                const itemPrice = parseFloat(menuItem.dataset.price);
-                updateCartItemQuantity(itemId, quantity, itemName, itemPrice);
-            } else {
-                // Si la cantidad es 0, eliminar del carrito
-                removeFromCart(itemId);
-            }
-        });
-    });
-    
-    // Eventos para los botones de propina
-    document.querySelectorAll('.tip-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const percent = parseInt(this.dataset.percent);
-            const subtotal = calculateSubtotal();
-            const tipAmount = (subtotal * percent / 100).toFixed(2);
-            
-            document.getElementById('tipAmount').value = tipAmount;
-            updateTotal();
-            
-            // Resaltar el botón seleccionado
-            document.querySelectorAll('.tip-btn').forEach(btn => {
-                btn.classList.remove('primary');
-            });
-            this.classList.add('primary');
-        });
-    });
-    
-    // Evento para el campo de propina personalizada
-    document.getElementById('tipAmount').addEventListener('input', function() {
-        // Quitar resaltado de los botones de propina
-        document.querySelectorAll('.tip-btn').forEach(btn => {
-            btn.classList.remove('primary');
-        });
-        
-        updateTotal();
-    });
-    
-    // Evento para el botón de realizar pedido
-    document.getElementById('placeOrderBtn').addEventListener('click', function() {
-        if (cart.length === 0) {
-            alert('Tu carrito está vacío. Agrega algunos productos antes de realizar el pedido.');
-            return;
+document.addEventListener("DOMContentLoaded", () => {
+    // Sidebar navigation links
+    const sidebarLinks = document.querySelectorAll(".sidebar-link")
+  
+    // Action buttons
+    const orderNowBtn = document.querySelector('a[href="/"]')
+    const recentOrdersBtn = document.querySelector('a[href="#"]')
+    const favoritesBtn = document.querySelector('a[href="#"]')
+    const viewAllLinks = document.querySelectorAll('a[href="#"]')
+    const orderAgainBtns = document.querySelectorAll("button.w-full")
+    const actionIcons = document.querySelectorAll(".text-purple-600.hover\\:text-purple-800")
+    const userProfileBtn = document.querySelector(".relative.group > button")
+  
+    // Handle sidebar navigation
+    sidebarLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        // Remove active class from all links
+        sidebarLinks.forEach((l) => l.classList.remove("active"))
+  
+        // Add active class to clicked link
+        this.classList.add("active")
+  
+        // Get the link text to determine which section to show
+        const linkText = this.querySelector("span").textContent.trim()
+  
+        // Show appropriate content based on link clicked
+        switch (linkText) {
+          case "Inicio":
+            showSection("home")
+            break
+          case "Mis Pedidos":
+            showSection("orders")
+            break
+          case "Favoritos":
+            showSection("favorites")
+            break
+          case "Direcciones":
+            showSection("addresses")
+            break
+          case "Métodos de Pago":
+            showSection("payment")
+            break
+          case "Configuración":
+            showSection("settings")
+            break
+          case "Cerrar Sesión":
+            window.location.href = "login.html"
+            break
         }
-        
-        // Crear nuevo pedido
-        const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        const newOrder = {
-            id: orders.length + 1,
-            userId: currentUser.id,
-            userName: currentUser.name,
-            userPhone: currentUser.phone,
-            userAddress: currentUser.address,
-            items: cart,
-            subtotal: calculateSubtotal(),
-            tip: parseFloat(document.getElementById('tipAmount').value || 0),
-            total: calculateTotal(),
-            status: 'new',
-            createdAt: new Date().toISOString()
-        };
-        
-        // Agregar pedido a la lista
-        orders.push(newOrder);
-        localStorage.setItem('orders', JSON.stringify(orders));
-        
-        // Registrar actividad de pedido
-        const userActivity = JSON.parse(localStorage.getItem('userActivity')) || [];
-        userActivity.push({
-            userId: currentUser.id,
-            action: 'order',
-            orderId: newOrder.id,
-            total: newOrder.total,
-            timestamp: new Date().toISOString()
-        });
-        localStorage.setItem('userActivity', JSON.stringify(userActivity));
-        
-        // Limpiar carrito
-        cart = [];
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Mostrar confirmación
-        document.getElementById('orderNumber').textContent = newOrder.id;
-        document.getElementById('orderConfirmation').style.display = 'block';
-        
-        // Actualizar interfaz
-        updateCartUI();
-        resetQuantities();
-    });
-    
-    // Evento para cerrar la confirmación
-    document.getElementById('closeConfirmation').addEventListener('click', function() {
-        document.getElementById('orderConfirmation').style.display = 'none';
-    });
-    
-    document.querySelector('#orderConfirmation .close').addEventListener('click', function() {
-        document.getElementById('orderConfirmation').style.display = 'none';
-    });
-    
-    // Funciones auxiliares
-    function addToCart(itemId, itemName, itemPrice) {
-        // Verificar si el item ya está en el carrito
-        const existingItem = cart.find(item => item.id === itemId);
-        
-        if (existingItem) {
-            existingItem.quantity++;
+      })
+    })
+  
+    // Handle "Ordenar Ahora" button
+    if (orderNowBtn) {
+      orderNowBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        window.location.href = "index.html#menu"
+      })
+    }
+  
+    // Handle "Pedidos Recientes" button
+    if (recentOrdersBtn) {
+      recentOrdersBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        showSection("orders")
+      })
+    }
+  
+    // Handle "Favoritos" button
+    if (favoritesBtn) {
+      favoritesBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        showSection("favorites")
+      })
+    }
+  
+    // Handle "Ver todos" links
+    viewAllLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        // Determine which "Ver todos" was clicked based on its parent section
+        const parentSection = this.closest(".bg-white")
+        const sectionTitle = parentSection.querySelector("h2").textContent.trim()
+  
+        if (sectionTitle === "Pedidos Recientes") {
+          showSection("orders")
+        } else if (sectionTitle === "Tus Favoritos") {
+          showSection("favorites")
+        }
+      })
+    })
+  
+    // Handle "Ordenar de Nuevo" buttons
+    orderAgainBtns.forEach((btn) => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        // Get product info from parent element
+        const productCard = this.closest(".bg-gray-50")
+        const productName = productCard.querySelector("h3").textContent.trim()
+        const productPrice = productCard.querySelector(".text-purple-600").textContent.trim()
+  
+        // Show notification that item was added to cart
+        showNotification(`${productName} añadido al carrito`)
+  
+        // Redirect to menu section after a short delay
+        setTimeout(() => {
+          window.location.href = "index.html#menu"
+        }, 1500)
+      })
+    })
+  
+    // Handle action icons (eye and reload)
+    actionIcons.forEach((icon) => {
+      icon.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        // Determine which icon was clicked
+        const isViewIcon = this.querySelector(".fa-eye")
+        const isReorderIcon = this.querySelector(".fa-redo-alt")
+  
+        // Get order info from the row
+        const orderRow = this.closest("tr")
+        const orderId = orderRow.querySelector("td:first-child").textContent.trim()
+  
+        if (isViewIcon) {
+          // Show order details modal
+          showOrderDetailsModal(orderId)
+        } else if (isReorderIcon) {
+          // Reorder the items from this order
+          showNotification(`Pedido ${orderId} añadido al carrito`)
+  
+          // Redirect to menu section after a short delay
+          setTimeout(() => {
+            window.location.href = "index.html#menu"
+          }, 1500)
+        }
+      })
+    })
+  
+    // Handle user profile button
+    if (userProfileBtn) {
+      userProfileBtn.addEventListener("click", function (e) {
+        const dropdown = this.nextElementSibling
+        dropdown.classList.toggle("hidden")
+      })
+    }
+  
+    // Function to show different sections
+    function showSection(sectionName) {
+      // This would normally load different content
+      // For demo purposes, we'll just show a notification
+      showNotification(`Sección de ${sectionName} cargada`)
+  
+      // Activate the corresponding sidebar link
+      sidebarLinks.forEach((link) => {
+        const linkText = link.querySelector("span").textContent.trim().toLowerCase()
+  
+        if (
+          (sectionName === "home" && linkText === "inicio") ||
+          (sectionName === "orders" && linkText === "mis pedidos") ||
+          (sectionName === "favorites" && linkText === "favoritos") ||
+          (sectionName === "addresses" && linkText === "direcciones") ||
+          (sectionName === "payment" && linkText === "métodos de pago") ||
+          (sectionName === "settings" && linkText === "configuración")
+        ) {
+          link.classList.add("active")
         } else {
-            cart.push({
-                id: itemId,
-                name: itemName,
-                price: itemPrice,
-                quantity: 1
-            });
+          link.classList.remove("active")
         }
-        
-        // Actualizar cantidad en la interfaz
-        const quantityElement = document.querySelector(`.menu-item[data-id="${itemId}"] .quantity`);
-        quantityElement.textContent = cart.find(item => item.id === itemId).quantity;
-        
-        // Guardar carrito en sessionStorage
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Actualizar interfaz
-        updateCartUI();
+      })
     }
-    
-    function updateCartItemQuantity(itemId, quantity, itemName, itemPrice) {
-        // Verificar si el item ya está en el carrito
-        const existingItem = cart.find(item => item.id === itemId);
-        
-        if (existingItem) {
-            existingItem.quantity = quantity;
-        } else {
-            cart.push({
-                id: itemId,
-                name: itemName,
-                price: itemPrice,
-                quantity: quantity
-            });
+  
+    // Function to show order details modal
+    function showOrderDetailsModal(orderId) {
+      // Create modal
+      const modal = document.createElement("div")
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      modal.innerHTML = `
+              <div class="bg-white rounded-xl p-8 max-w-md w-full">
+                  <div class="flex justify-between items-center mb-6">
+                      <h2 class="text-2xl font-bold text-gray-800">Detalles del Pedido ${orderId}</h2>
+                      <button class="close-modal text-gray-500 hover:text-gray-700">
+                          <i class="fas fa-times text-xl"></i>
+                      </button>
+                  </div>
+                  <div class="space-y-4">
+                      <div class="border-b pb-2">
+                          <p class="text-gray-600">Fecha: 23/04/2023</p>
+                          <p class="text-gray-600">Estado: <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Entregado</span></p>
+                      </div>
+                      <div>
+                          <h3 class="font-bold text-gray-800 mb-2">Productos:</h3>
+                          <ul class="space-y-2">
+                              <li class="flex justify-between">
+                                  <span>California Roll x2</span>
+                                  <span>$17.98</span>
+                              </li>
+                              <li class="flex justify-between">
+                                  <span>Mojito x1</span>
+                                  <span>$6.99</span>
+                              </li>
+                              <li class="flex justify-between">
+                                  <span>Pizza Pepperoni x1</span>
+                                  <span>$13.99</span>
+                              </li>
+                          </ul>
+                      </div>
+                      <div class="border-t pt-2">
+                          <div class="flex justify-between font-bold text-gray-800">
+                              <span>Total:</span>
+                              <span>$38.96</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mt-6 flex justify-end">
+                      <button class="close-modal bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2">
+                          Cerrar
+                      </button>
+                      <button class="reorder-btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                          Ordenar de Nuevo
+                      </button>
+                  </div>
+              </div>
+          `
+  
+      document.body.appendChild(modal)
+  
+      // Add event listeners to modal buttons
+      modal.querySelector(".close-modal").addEventListener("click", () => {
+        document.body.removeChild(modal)
+      })
+  
+      modal.querySelector(".reorder-btn").addEventListener("click", () => {
+        document.body.removeChild(modal)
+        showNotification(`Pedido ${orderId} añadido al carrito`)
+  
+        // Redirect to menu section after a short delay
+        setTimeout(() => {
+          window.location.href = "index.html#menu"
+        }, 1500)
+      })
+  
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal)
         }
-        
-        // Guardar carrito en sessionStorage
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Actualizar interfaz
-        updateCartUI();
+      })
     }
-    
-    function removeFromCart(itemId) {
-        // Eliminar item del carrito
-        cart = cart.filter(item => item.id !== itemId);
-        
-        // Guardar carrito en sessionStorage
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Actualizar interfaz
-        updateCartUI();
+  
+    // Function to show notification
+    function showNotification(message) {
+      const notification = document.createElement("div")
+      notification.className =
+        "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-transform duration-300 translate-y-0"
+      notification.textContent = message
+      document.body.appendChild(notification)
+  
+      setTimeout(() => {
+        notification.classList.add("translate-y-20")
+        setTimeout(() => {
+          document.body.removeChild(notification)
+        }, 300)
+      }, 3000)
     }
-    
-    function updateCartUI() {
-        const cartItemsContainer = document.getElementById('cartItems');
-        cartItemsContainer.innerHTML = '';
-        
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Tu carrito está vacío</p>';
-        } else {
-            cart.forEach(item => {
-                const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
-                cartItem.innerHTML = `
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                    </div>
-                    <div class="cart-item-quantity">
-                        <span>x${item.quantity}</span>
-                    </div>
-                    <div class="cart-item-total">$${(item.price * item.quantity).toFixed(2)}</div>
-                `;
-                cartItemsContainer.appendChild(cartItem);
-            });
-        }
-        
-        // Actualizar subtotal y total
-        document.getElementById('subtotal').textContent = `$${calculateSubtotal().toFixed(2)}`;
-        updateTotal();
-    }
-    
-    function calculateSubtotal() {
-        return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    }
-    
-    function updateTotal() {
-        const subtotal = calculateSubtotal();
-        const tip = parseFloat(document.getElementById('tipAmount').value || 0);
-        const total = subtotal + tip;
-        
-        document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-    }
-    
-    function calculateTotal() {
-        const subtotal = calculateSubtotal();
-        const tip = parseFloat(document.getElementById('tipAmount').value || 0);
-        return subtotal + tip;
-    }
-    
-    function resetQuantities() {
-        document.querySelectorAll('.quantity').forEach(element => {
-            element.textContent = '0';
-        });
-    }
-});
+  })
+  

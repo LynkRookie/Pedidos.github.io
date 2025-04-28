@@ -1,590 +1,434 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si el usuario está logueado y es administrador
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser || currentUser.role !== 'admin') {
-        window.location.href = 'index.html';
-        return;
+document.addEventListener("DOMContentLoaded", () => {
+    // Sidebar navigation links
+    const sidebarLinks = document.querySelectorAll(".sidebar-link")
+  
+    // Action buttons
+    const exportReportBtn = document.querySelector(".bg-purple-600.hover\\:bg-purple-700")
+    const dateFilter = document.querySelector("select.border.border-gray-300")
+    const notificationBtn = document.querySelector(".fas.fa-bell").parentElement
+    const userProfileBtn = document.querySelector(".relative.group > button")
+  
+    // Handle sidebar navigation
+    sidebarLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault()
+  
+        // Remove active class from all links
+        sidebarLinks.forEach((l) => l.classList.remove("active"))
+  
+        // Add active class to clicked link
+        this.classList.add("active")
+  
+        // Get the link text to determine which section to show
+        const linkText = this.querySelector("span").textContent.trim()
+  
+        // Show appropriate content based on link clicked
+        switch (linkText) {
+          case "Dashboard":
+            showSection("dashboard")
+            break
+          case "Usuarios":
+            showSection("users")
+            break
+          case "Vendedores":
+            showSection("vendors")
+            break
+          case "Productos":
+            showSection("products")
+            break
+          case "Pedidos":
+            showSection("orders")
+            break
+          case "Estadísticas":
+            showSection("statistics")
+            break
+          case "Configuración":
+            showSection("settings")
+            break
+          case "Cerrar Sesión":
+            window.location.href = "login.html"
+            break
+        }
+      })
+    })
+  
+    // Handle Export Report button
+    if (exportReportBtn) {
+      exportReportBtn.addEventListener("click", () => {
+        // Show export options modal
+        showExportOptionsModal()
+      })
     }
-    
-    // Mostrar nombre del administrador
-    document.getElementById('adminName').textContent = currentUser.name;
-    
-    // Evento para cerrar sesión
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
-    });
-    
-    // Eventos para las pestañas
-    document.querySelectorAll('.tab-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            // Quitar clase active de todas las pestañas
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Quitar clase active de todos los contenidos
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Agregar clase active a la pestaña seleccionada
-            this.classList.add('active');
-            
-            // Mostrar contenido correspondiente
-            const tabId = this.dataset.tab;
-            document.getElementById(tabId).classList.add('active');
-            
-            // Cargar datos específicos de la pestaña
-            if (tabId === 'salesSummary') {
-                loadSalesSummary();
-            } else if (tabId === 'userActivity') {
-                loadUserActivity();
-            } else if (tabId === 'manageUsers') {
-                loadUsers();
-            }
-        });
-    });
-    
-    // Eventos para filtros de fecha
-    document.getElementById('dateRange').addEventListener('change', function() {
-        const customDateRange = document.getElementById('customDateRange');
-        if (this.value === 'custom') {
-            customDateRange.style.display = 'flex';
+  
+    // Handle Date Filter
+    if (dateFilter) {
+      dateFilter.addEventListener("change", function () {
+        const selectedOption = this.value
+        showNotification(`Filtrando datos por: ${selectedOption}`)
+  
+        // This would normally update the dashboard data
+        // For demo purposes, we'll just show a loading indicator
+        const dashboardContent = document.querySelector("main")
+        dashboardContent.style.opacity = "0.5"
+  
+        setTimeout(() => {
+          dashboardContent.style.opacity = "1"
+          showNotification("Datos actualizados")
+        }, 1000)
+      })
+    }
+  
+    // Handle notification button
+    if (notificationBtn) {
+      notificationBtn.addEventListener("click", () => {
+        // Show notifications modal
+        showNotificationsModal()
+      })
+    }
+  
+    // Handle user profile button
+    if (userProfileBtn) {
+      userProfileBtn.addEventListener("click", function (e) {
+        const dropdown = this.nextElementSibling
+        dropdown.classList.toggle("hidden")
+      })
+    }
+  
+    // Function to show different sections
+    function showSection(sectionName) {
+      // This would normally load different content
+      // For demo purposes, we'll just show a notification
+      showNotification(`Sección de ${sectionName} cargada`)
+  
+      // Activate the corresponding sidebar link
+      sidebarLinks.forEach((link) => {
+        const linkText = link.querySelector("span").textContent.trim().toLowerCase()
+  
+        if (
+          (sectionName === "dashboard" && linkText === "dashboard") ||
+          (sectionName === "users" && linkText === "usuarios") ||
+          (sectionName === "vendors" && linkText === "vendedores") ||
+          (sectionName === "products" && linkText === "productos") ||
+          (sectionName === "orders" && linkText === "pedidos") ||
+          (sectionName === "statistics" && linkText === "estadísticas") ||
+          (sectionName === "settings" && linkText === "configuración")
+        ) {
+          link.classList.add("active")
         } else {
-            customDateRange.style.display = 'none';
-            loadSalesSummary();
+          link.classList.remove("active")
         }
-    });
-    
-    document.getElementById('applyDateFilter').addEventListener('click', function() {
-        loadSalesSummary();
-    });
-    
-    document.getElementById('activityDateRange').addEventListener('change', function() {
-        const customDateRange = document.getElementById('activityCustomDateRange');
-        if (this.value === 'custom') {
-            customDateRange.style.display = 'flex';
+      })
+    }
+  
+    // Function to show export options modal
+    function showExportOptionsModal() {
+      // Create modal
+      const modal = document.createElement("div")
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      modal.innerHTML = `
+              <div class="bg-white rounded-xl p-8 max-w-md w-full">
+                  <div class="flex justify-between items-center mb-6">
+                      <h2 class="text-2xl font-bold text-gray-800">Exportar Reporte</h2>
+                      <button class="close-modal text-gray-500 hover:text-gray-700">
+                          <i class="fas fa-times text-xl"></i>
+                      </button>
+                  </div>
+                  <p class="text-gray-600 mb-4">Selecciona el formato de exportación:</p>
+                  <div class="space-y-3 mb-6">
+                      <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                          <div class="bg-red-100 p-2 rounded-full mr-3">
+                              <i class="fas fa-file-pdf text-red-600"></i>
+                          </div>
+                          <div>
+                              <h4 class="font-bold text-gray-800">PDF</h4>
+                              <p class="text-gray-600 text-sm">Exportar como documento PDF</p>
+                          </div>
+                      </div>
+                      <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                          <div class="bg-green-100 p-2 rounded-full mr-3">
+                              <i class="fas fa-file-excel text-green-600"></i>
+                          </div>
+                          <div>
+                              <h4 class="font-bold text-gray-800">Excel</h4>
+                              <p class="text-gray-600 text-sm">Exportar como hoja de cálculo Excel</p>
+                          </div>
+                      </div>
+                      <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                          <div class="bg-blue-100 p-2 rounded-full mr-3">
+                              <i class="fas fa-file-csv text-blue-600"></i>
+                          </div>
+                          <div>
+                              <h4 class="font-bold text-gray-800">CSV</h4>
+                              <p class="text-gray-600 text-sm">Exportar como archivo CSV</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="flex justify-end">
+                      <button class="close-modal bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2">
+                          Cancelar
+                      </button>
+                      <button class="export-btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                          Exportar
+                      </button>
+                  </div>
+              </div>
+          `
+  
+      document.body.appendChild(modal)
+  
+      // Add event listeners to modal buttons
+      modal.querySelector(".close-modal").addEventListener("click", () => {
+        document.body.removeChild(modal)
+      })
+  
+      // Add event listeners to export format options
+      const exportOptions = modal.querySelectorAll(".flex.items-center.p-3")
+      let selectedOption = null
+  
+      exportOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          // Remove selected class from all options
+          exportOptions.forEach((opt) => opt.classList.remove("bg-purple-50", "border-purple-300"))
+  
+          // Add selected class to clicked option
+          option.classList.add("bg-purple-50", "border-purple-300")
+          selectedOption = option
+        })
+      })
+  
+      modal.querySelector(".export-btn").addEventListener("click", () => {
+        if (selectedOption) {
+          const formatName = selectedOption.querySelector("h4").textContent.trim()
+  
+          // Show notification
+          showNotification(`Exportando reporte en formato ${formatName}`)
+  
+          // Simulate download
+          setTimeout(() => {
+            showNotification(`Reporte en formato ${formatName} descargado correctamente`)
+          }, 1500)
+  
+          // Close modal
+          document.body.removeChild(modal)
         } else {
-            customDateRange.style.display = 'none';
-            loadUserActivity();
+          alert("Por favor selecciona un formato de exportación")
         }
-    });
-    
-    document.getElementById('applyActivityDateFilter').addEventListener('click', function() {
-        loadUserActivity();
-    });
-    
-    // Eventos para filtros de usuarios
-    document.getElementById('userSearchInput').addEventListener('input', function() {
-        filterUsers();
-    });
-    
-    document.getElementById('userRoleFilter').addEventListener('change', function() {
-        filterUsers();
-    });
-    
-    // Evento para agregar usuario
-    document.getElementById('addUserBtn').addEventListener('click', function() {
-        showUserForm();
-    });
-    
-    // Evento para cerrar modal
-    document.querySelectorAll('.close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function() {
-            this.closest('.modal').style.display = 'none';
-        });
-    });
-    
-    // Evento para el formulario de usuario
-    document.getElementById('userForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        saveUser();
-    });
-    
-    // Cargar datos iniciales
-    loadSalesSummary();
-    
-    // Funciones auxiliares
-    function loadSalesSummary() {
-        const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        const dateRange = document.getElementById('dateRange').value;
-        
-        // Filtrar pedidos por fecha
-        const filteredOrders = filterOrdersByDate(orders, dateRange);
-        
-        // Calcular estadísticas
-        const completedOrders = filteredOrders.filter(order => order.status === 'completed');
-        const totalSales = completedOrders.reduce((total, order) => total + order.total, 0);
-        const totalTips = completedOrders.reduce((total, order) => total + order.tip, 0);
-        const averageOrder = completedOrders.length > 0 ? totalSales / completedOrders.length : 0;
-        
-        // Mostrar estadísticas
-        document.getElementById('totalSales').textContent = `$${totalSales.toFixed(2)}`;
-        document.getElementById('completedOrders').textContent = completedOrders.length;
-        document.getElementById('totalTips').textContent = `$${totalTips.toFixed(2)}`;
-        document.getElementById('averageOrder').textContent = `$${averageOrder.toFixed(2)}`;
-        
-        // Calcular productos más vendidos
-        const popularItems = calculatePopularItems(completedOrders);
-        
-        // Mostrar productos más vendidos
-        const popularItemsTable = document.getElementById('popularItemsTable').querySelector('tbody');
-        popularItemsTable.innerHTML = '';
-        
-        popularItems.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.total.toFixed(2)}</td>
-            `;
-            popularItemsTable.appendChild(row);
-        });
-        
-        // Generar datos para el gráfico
-        const chartData = generateChartData(completedOrders, dateRange);
-        
-        // Crear gráfico
-        createSalesChart(chartData);
+      })
+  
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal)
+        }
+      })
     }
-    
-    function loadUserActivity() {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        const userActivity = JSON.parse(localStorage.getItem('userActivity')) || [];
-        const dateRange = document.getElementById('activityDateRange').value;
-        
-        // Filtrar actividad por fecha
-        const filteredActivity = filterActivityByDate(userActivity, dateRange);
-        
-        // Agrupar actividad por usuario
-        const userActivityMap = {};
-        
-        users.forEach(user => {
-            userActivityMap[user.id] = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                lastLogin: null,
-                ordersCount: 0,
-                totalSpent: 0
-            };
-        });
-        
-        // Procesar actividad de inicio de sesión
-        filteredActivity.forEach(activity => {
-            if (activity.action === 'login' && userActivityMap[activity.userId]) {
-                const loginDate = new Date(activity.timestamp);
-                if (!userActivityMap[activity.userId].lastLogin || 
-                    loginDate > new Date(userActivityMap[activity.userId].lastLogin)) {
-                    userActivityMap[activity.userId].lastLogin = activity.timestamp;
-                }
-            }
-        });
-        
-        // Procesar pedidos
-        orders.forEach(order => {
-            if (order.status === 'completed' && userActivityMap[order.userId]) {
-                const orderDate = new Date(order.createdAt);
-                const startDate = getStartDate(dateRange);
-                const endDate = getEndDate(dateRange);
-                
-                if ((!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate)) {
-                    userActivityMap[order.userId].ordersCount++;
-                    userActivityMap[order.userId].totalSpent += order.total;
-                }
-            }
-        });
-        
-        // Mostrar actividad de usuarios
-        const userActivityTable = document.getElementById('userActivityTable').querySelector('tbody');
-        userActivityTable.innerHTML = '';
-        
-        Object.values(userActivityMap).forEach(userActivity => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${userActivity.name}</td>
-                <td>${userActivity.email}</td>
-                <td>${userActivity.lastLogin ? new Date(userActivity.lastLogin).toLocaleString() : 'Nunca'}</td>
-                <td>${userActivity.ordersCount}</td>
-                <td>$${userActivity.totalSpent.toFixed(2)}</td>
-            `;
-            userActivityTable.appendChild(row);
-        });
+  
+    // Function to show notifications modal
+    function showNotificationsModal() {
+      // Create modal
+      const modal = document.createElement("div")
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      modal.innerHTML = `
+              <div class="bg-white rounded-xl p-8 max-w-md w-full">
+                  <div class="flex justify-between items-center mb-6">
+                      <h2 class="text-2xl font-bold text-gray-800">Notificaciones</h2>
+                      <button class="close-modal text-gray-500 hover:text-gray-700">
+                          <i class="fas fa-times text-xl"></i>
+                      </button>
+                  </div>
+                  <div class="space-y-4 max-h-96 overflow-y-auto">
+                      <div class="p-3 border rounded-lg bg-yellow-50">
+                          <div class="flex items-start">
+                              <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                                  <i class="fas fa-user-plus text-yellow-600"></i>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-gray-800">Nuevo Usuario Registrado</h4>
+                                  <p class="text-gray-600 text-sm">María González se ha registrado en la plataforma.</p>
+                                  <p class="text-gray-500 text-xs mt-1">Hace 1 hora</p>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="p-3 border rounded-lg bg-red-50">
+                          <div class="flex items-start">
+                              <div class="bg-red-100 p-2 rounded-full mr-3">
+                                  <i class="fas fa-exclamation-triangle text-red-600"></i>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-gray-800">Alerta de Inventario</h4>
+                                  <p class="text-gray-600 text-sm">El producto "California Roll" está por agotarse.</p>
+                                  <p class="text-gray-500 text-xs mt-1">Hace 3 horas</p>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="p-3 border rounded-lg bg-green-50">
+                          <div class="flex items-start">
+                              <div class="bg-green-100 p-2 rounded-full mr-3">
+                                  <i class="fas fa-chart-line text-green-600"></i>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-gray-800">Ventas Incrementadas</h4>
+                                  <p class="text-gray-600 text-sm">Las ventas han aumentado un 15% respecto al mes anterior.</p>
+                                  <p class="text-gray-500 text-xs mt-1">Hace 5 horas</p>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="p-3 border rounded-lg bg-blue-50">
+                          <div class="flex items-start">
+                              <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                  <i class="fas fa-user-tie text-blue-600"></i>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-gray-800">Nuevo Vendedor</h4>
+                                  <p class="text-gray-600 text-sm">Roberto Sánchez se ha unido como vendedor.</p>
+                                  <p class="text-gray-500 text-xs mt-1">Hace 1 día</p>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="p-3 border rounded-lg bg-purple-50">
+                          <div class="flex items-start">
+                              <div class="bg-purple-100 p-2 rounded-full mr-3">
+                                  <i class="fas fa-cog text-purple-600"></i>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-gray-800">Actualización del Sistema</h4>
+                                  <p class="text-gray-600 text-sm">Se ha instalado la versión 2.0 del sistema.</p>
+                                  <p class="text-gray-500 text-xs mt-1">Hace 2 días</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mt-6 flex justify-end">
+                      <button class="close-modal bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2">
+                          Cerrar
+                      </button>
+                      <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                          Marcar como leídas
+                      </button>
+                  </div>
+              </div>
+          `
+  
+      document.body.appendChild(modal)
+  
+      // Add event listeners to modal buttons
+      const closeButtons = modal.querySelectorAll(".close-modal")
+      closeButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.body.removeChild(modal)
+        })
+      })
+  
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal)
+        }
+      })
     }
-    
-    function loadUsers() {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        // Mostrar usuarios
-        const usersTable = document.getElementById('usersTable').querySelector('tbody');
-        usersTable.innerHTML = '';
-        
-        users.forEach(user => {
-            const row = document.createElement('tr');
-            row.dataset.userId = user.id;
-            
-            // Formatear fecha de registro
-            const createdDate = new Date(user.createdAt);
-            const formattedDate = createdDate.toLocaleDateString();
-            
-            // Traducir rol
-            let roleName;
-            switch(user.role) {
-                case 'admin':
-                    roleName = 'Administrador';
-                    break;
-                case 'vendor':
-                    roleName = 'Vendedor';
-                    break;
-                default:
-                    roleName = 'Cliente';
-                    break;
-            }
-            
-            row.innerHTML = `
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${roleName}</td>
-                <td>${formattedDate}</td>
-                <td>
-                    <button class="btn small edit-user">Editar</button>
-                    <button class="btn small delete-user">Eliminar</button>
-                </td>
-            `;
-            usersTable.appendChild(row);
-        });
-        
-        // Eventos para botones de editar y eliminar
-        document.querySelectorAll('.edit-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = parseInt(this.closest('tr').dataset.userId);
-                editUser(userId);
-            });
-        });
-        
-        document.querySelectorAll('.delete-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = parseInt(this.closest('tr').dataset.userId);
-                deleteUser(userId);
-            });
-        });
+  
+    // Function to show notification
+    function showNotification(message) {
+      const notification = document.createElement("div")
+      notification.className =
+        "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-transform duration-300 translate-y-0"
+      notification.textContent = message
+      document.body.appendChild(notification)
+  
+      setTimeout(() => {
+        notification.classList.add("translate-y-20")
+        setTimeout(() => {
+          document.body.removeChild(notification)
+        }, 300)
+      }, 3000)
     }
-    
-    function filterUsers() {
-        const searchTerm = document.getElementById('userSearchInput').value.toLowerCase();
-        const roleFilter = document.getElementById('userRoleFilter').value;
-        const rows = document.getElementById('usersTable').querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            const name = row.cells[0].textContent.toLowerCase();
-            const email = row.cells[1].textContent.toLowerCase();
-            const role = row.cells[2].textContent.toLowerCase();
-            
-            const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
-            const matchesRole = roleFilter === 'all' || 
-                (roleFilter === 'admin' && role === 'administrador') ||
-                (roleFilter === 'vendor' && role === 'vendedor') ||
-                (roleFilter === 'user' && role === 'cliente');
-            
-            if (matchesSearch && matchesRole) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+  
+    // Add date picker functionality for custom date range
+    const dateFilterSelect = document.querySelector("select.border.border-gray-300")
+    if (dateFilterSelect) {
+      dateFilterSelect.addEventListener("change", function () {
+        if (this.value === "Personalizado") {
+          showDateRangePickerModal()
+        }
+      })
     }
-    
-    function showUserForm(userId = null) {
-        const formTitle = document.getElementById('userFormTitle');
-        const form = document.getElementById('userForm');
-        
-        // Limpiar formulario
-        form.reset();
-        
-        if (userId) {
-            // Editar usuario existente
-            formTitle.textContent = 'Editar Usuario';
-            
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.id === userId);
-            
-            if (user) {
-                document.getElementById('userName').value = user.name;
-                document.getElementById('userEmail').value = user.email;
-                document.getElementById('userPhone').value = user.phone;
-                document.getElementById('userAddress').value = user.address;
-                document.getElementById('userRole').value = user.role;
-                document.getElementById('userPassword').value = user.password;
-                
-                // Guardar ID del usuario en el formulario
-                form.dataset.userId = userId;
-            }
+  
+    // Function to show date range picker modal
+    function showDateRangePickerModal() {
+      // Create modal
+      const modal = document.createElement("div")
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      modal.innerHTML = `
+              <div class="bg-white rounded-xl p-8 max-w-md w-full">
+                  <div class="flex justify-between items-center mb-6">
+                      <h2 class="text-2xl font-bold text-gray-800">Seleccionar Rango de Fechas</h2>
+                      <button class="close-modal text-gray-500 hover:text-gray-700">
+                          <i class="fas fa-times text-xl"></i>
+                      </button>
+                  </div>
+                  <div class="space-y-4">
+                      <div>
+                          <label for="startDate" class="block text-gray-700 font-medium mb-2">Fecha de Inicio</label>
+                          <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                      </div>
+                      <div>
+                          <label for="endDate" class="block text-gray-700 font-medium mb-2">Fecha de Fin</label>
+                          <input type="date" id="endDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                      </div>
+                  </div>
+                  <div class="mt-6 flex justify-end">
+                      <button class="close-modal bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2">
+                          Cancelar
+                      </button>
+                      <button class="apply-date-range bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                          Aplicar
+                      </button>
+                  </div>
+              </div>
+          `
+  
+      document.body.appendChild(modal)
+  
+      // Add event listeners to modal buttons
+      modal.querySelector(".close-modal").addEventListener("click", () => {
+        document.body.removeChild(modal)
+        // Reset select to previous value
+        dateFilterSelect.value = "Hoy"
+      })
+  
+      modal.querySelector(".apply-date-range").addEventListener("click", () => {
+        const startDate = modal.querySelector("#startDate").value
+        const endDate = modal.querySelector("#endDate").value
+  
+        if (startDate && endDate) {
+          // Show notification
+          showNotification(`Filtrando datos desde ${startDate} hasta ${endDate}`)
+  
+          // This would normally update the dashboard data
+          // For demo purposes, we'll just show a loading indicator
+          const dashboardContent = document.querySelector("main")
+          dashboardContent.style.opacity = "0.5"
+  
+          setTimeout(() => {
+            dashboardContent.style.opacity = "1"
+            showNotification("Datos actualizados")
+          }, 1000)
+  
+          // Close modal
+          document.body.removeChild(modal)
         } else {
-            // Agregar nuevo usuario
-            formTitle.textContent = 'Agregar Usuario';
-            delete form.dataset.userId;
+          alert("Por favor selecciona fechas de inicio y fin")
         }
-        
-        // Mostrar modal
-        document.getElementById('userFormModal').style.display = 'block';
-    }
-    
-    function saveUser() {
-        const form = document.getElementById('userForm');
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        const name = document.getElementById('userName').value;
-        const email = document.getElementById('userEmail').value;
-        const phone = document.getElementById('userPhone').value;
-        const address = document.getElementById('userAddress').value;
-        const role = document.getElementById('userRole').value;
-        const password = document.getElementById('userPassword').value;
-        
-        if (form.dataset.userId) {
-            // Actualizar usuario existente
-            const userId = parseInt(form.dataset.userId);
-            const userIndex = users.findIndex(u => u.id === userId);
-            
-            if (userIndex !== -1) {
-                users[userIndex].name = name;
-                users[userIndex].email = email;
-                users[userIndex].phone = phone;
-                users[userIndex].address = address;
-                users[userIndex].role = role;
-                users[userIndex].password = password;
-            }
-        } else {
-            // Crear nuevo usuario
-            const newUser = {
-                id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
-                name,
-                email,
-                phone,
-                address,
-                role,
-                password,
-                createdAt: new Date().toISOString()
-            };
-            
-            users.push(newUser);
+      })
+  
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal)
+          // Reset select to previous value
+          dateFilterSelect.value = "Hoy"
         }
-        
-        // Guardar cambios
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Cerrar modal
-        document.getElementById('userFormModal').style.display = 'none';
-        
-        // Recargar lista de usuarios
-        loadUsers();
+      })
     }
-    
-    function editUser(userId) {
-        showUserForm(userId);
-    }
-    
-    function deleteUser(userId) {
-        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            
-            // Verificar si es el último administrador
-            const admins = users.filter(u => u.role === 'admin');
-            const userToDelete = users.find(u => u.id === userId);
-            
-            if (userToDelete && userToDelete.role === 'admin' && admins.length <= 1) {
-                alert('No puedes eliminar el último administrador del sistema.');
-                return;
-            }
-            
-            // Eliminar usuario
-            const updatedUsers = users.filter(u => u.id !== userId);
-            localStorage.setItem('users', JSON.stringify(updatedUsers));
-            
-            // Recargar lista de usuarios
-            loadUsers();
-        }
-    }
-    
-    function filterOrdersByDate(orders, dateRange) {
-        const startDate = getStartDate(dateRange);
-        const endDate = getEndDate(dateRange);
-        
-        return orders.filter(order => {
-            const orderDate = new Date(order.createdAt);
-            return (!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate);
-        });
-    }
-    
-    function filterActivityByDate(activities, dateRange) {
-        const startDate = getStartDate(dateRange);
-        const endDate = getEndDate(dateRange);
-        
-        return activities.filter(activity => {
-            const activityDate = new Date(activity.timestamp);
-            return (!startDate || activityDate >= startDate) && (!endDate || activityDate <= endDate);
-        });
-    }
-    
-    function getStartDate(dateRange) {
-        const now = new Date();
-        let startDate;
-        
-        switch(dateRange) {
-            case 'today':
-                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                break;
-            case 'yesterday':
-                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-                break;
-            case 'week':
-                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-                break;
-            case 'month':
-                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                break;
-            case 'custom':
-                const startDateInput = dateRange === 'custom' ? 
-                    document.getElementById('startDate') : 
-                    document.getElementById('activityStartDate');
-                if (startDateInput.value) {
-                    startDate = new Date(startDateInput.value);
-                }
-                break;
-            default:
-                startDate = null;
-        }
-        
-        return startDate;
-    }
-    
-    function getEndDate(dateRange) {
-        const now = new Date();
-        let endDate;
-        
-        switch(dateRange) {
-            case 'today':
-                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-                break;
-            case 'yesterday':
-                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 23, 59, 59);
-                break;
-            case 'week':
-                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - now.getDay()), 23, 59, 59);
-                break;
-            case 'month':
-                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-                break;
-            case 'custom':
-                const endDateInput = dateRange === 'custom' ? 
-                    document.getElementById('endDate') : 
-                    document.getElementById('activityEndDate');
-                if (endDateInput.value) {
-                    endDate = new Date(endDateInput.value);
-                    endDate.setHours(23, 59, 59);
-                }
-                break;
-            default:
-                endDate = new Date();
-        }
-        
-        return endDate;
-    }
-    
-    function calculatePopularItems(orders) {
-        const itemsMap = {};
-        
-        orders.forEach(order => {
-            order.items.forEach(item => {
-                if (itemsMap[item.id]) {
-                    itemsMap[item.id].quantity += item.quantity;
-                    itemsMap[item.id].total += item.price * item.quantity;
-                } else {
-                    itemsMap[item.id] = {
-                        id: item.id,
-                        name: item.name,
-                        quantity: item.quantity,
-                        total: item.price * item.quantity
-                    };
-                }
-            });
-        });
-        
-        // Convertir a array y ordenar por cantidad
-        return Object.values(itemsMap).sort((a, b) => b.quantity - a.quantity);
-    }
-    
-    function generateChartData(orders, dateRange) {
-        const data = {};
-        const labels = [];
-        const values = [];
-        
-        // Agrupar ventas por día
-        orders.forEach(order => {
-            const orderDate = new Date(order.createdAt);
-            const dateKey = orderDate.toLocaleDateString();
-            
-            if (data[dateKey]) {
-                data[dateKey] += order.total;
-            } else {
-                data[dateKey] = order.total;
-            }
-        });
-        
-        // Ordenar por fecha
-        const sortedDates = Object.keys(data).sort((a, b) => new Date(a) - new Date(b));
-        
-        sortedDates.forEach(date => {
-            labels.push(date);
-            values.push(data[date]);
-        });
-        
-        return { labels, values };
-    }
-    
-    function createSalesChart(data) {
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        
-        // Destruir gráfico existente si hay uno
-        if (window.salesChart) {
-            window.salesChart.destroy();
-        }
-        
-        // Crear nuevo gráfico
-        window.salesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: 'Ventas ($)',
-                    data: data.values,
-                    backgroundColor: 'rgba(231, 76, 60, 0.7)',
-                    borderColor: 'rgba(231, 76, 60, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '$' + value;
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return '$' + context.raw.toFixed(2);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-});
+  })
+  

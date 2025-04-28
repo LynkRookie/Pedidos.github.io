@@ -3,65 +3,651 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sushi Express - Sistema de Pedidos</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>FoodExpress - Pedidos de Comida</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Sushi Express</h1>
-            <p>Los mejores sabores a un clic de distancia</p>
-        </header>
-
-        <div id="loginSection" class="section active">
-            <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Correo Electrónico</label>
-                    <input type="email" id="loginEmail" required>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="/placeholder.svg?height=40&width=40" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold">FoodExpress</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-purple-200 transition duration-300 font-medium">Inicio</a>
+                <a href="#menu" class="hover:text-purple-200 transition duration-300 font-medium">Menú</a>
+                <a href="#about" class="hover:text-purple-200 transition duration-300 font-medium">Nosotros</a>
+                <a href="#contact" class="hover:text-purple-200 transition duration-300 font-medium">Contacto</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <div class="relative group">
+                    <button id="cartButton" class="text-white hover:text-purple-200 transition duration-300">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                    <div id="cartDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl z-50 p-4">
+                        <h3 class="text-gray-800 font-bold mb-2">Tu Carrito</h3>
+                        <div id="cartItems" class="max-h-64 overflow-y-auto">
+                            <p class="text-gray-500 text-center py-4">Tu carrito está vacío</p>
+                        </div>
+                        <div class="border-t mt-2 pt-2">
+                            <div class="flex justify-between font-bold text-gray-800">
+                                <span>Total:</span>
+                                <span id="cartTotal">$0.00</span>
+                            </div>
+                            <button id="checkoutButton" class="mt-3 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300 disabled:opacity-50" disabled>
+                                Realizar Pedido
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="loginPassword">Contraseña</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn primary">Iniciar Sesión</button>
-                </div>
-                <p>¿No tienes una cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
-            </form>
+                <a href="assest/vista/login.html" class="bg-white text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-full font-medium transition duration-300">
+                    <i class="fas fa-user mr-1"></i> Ingresar
+                </a>
+            </div>
         </div>
+    </header>
 
-        <div id="registerSection" class="section">
-            <h2>Crear Cuenta</h2>
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="registerName">Nombre Completo</label>
-                    <input type="text" id="registerName" required>
+    <!-- Hero Section -->
+    <section class="relative bg-gray-900 text-white">
+        <div class="absolute inset-0 bg-center bg-cover bg-opacity-60" style="background-image: url('/placeholder.svg?height=800&width=1600'); background-color: rgba(0,0,0,0.7);"></div>
+        <div class="container mx-auto px-4 py-24 relative z-10">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Deliciosa comida a un clic de distancia</h1>
+                <p class="text-xl mb-8">Disfruta de los mejores sushi, pizzas y bebidas con entrega rápida a tu domicilio.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#menu" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-center">
+                        Ver Menú
+                    </a>
+                    <a href="assets/vista/login.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-center">
+                        Crear Cuenta
+                    </a>
                 </div>
-                <div class="form-group">
-                    <label for="registerEmail">Correo Electrónico</label>
-                    <input type="email" id="registerEmail" required>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Nuestras Categorías</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
+                    <img src="/placeholder.svg?height=300&width=500&text=Sushi" alt="Sushi" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Sushi</h3>
+                        <p class="text-gray-600 mb-4">Descubre nuestra variedad de rolls frescos y deliciosos preparados por chefs expertos.</p>
+                        <a href="#sushi" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">Ver opciones →</a>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="registerPhone">Número Telefónico</label>
-                    <input type="tel" id="registerPhone" required>
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
+                    <img src="/placeholder.svg?height=300&width=500&text=Pizza" alt="Pizza" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Pizza</h3>
+                        <p class="text-gray-600 mb-4">Pizzas artesanales con ingredientes frescos y masa perfectamente horneada.</p>
+                        <a href="#pizza" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">Ver opciones →</a>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="registerAddress">Dirección</label>
-                    <textarea id="registerAddress" required></textarea>
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
+                    <img src="/placeholder.svg?height=300&width=500&text=Bebidas" alt="Bebidas" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Bebidas</h3>
+                        <p class="text-gray-600 mb-4">Refrescantes bebidas y cócteles para acompañar perfectamente tu comida.</p>
+                        <a href="#bebidas" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">Ver opciones →</a>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="registerPassword">Contraseña</label>
-                    <input type="password" id="registerPassword" required>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">Nuestro Menú</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explora nuestra selección de deliciosos platos preparados con los mejores ingredientes.</p>
+            
+            <!-- Menu Tabs -->
+            <div class="flex flex-wrap justify-center mb-8">
+                <button class="menu-tab active-tab mx-2 mb-4 px-6 py-2 rounded-full font-medium" data-category="all">Todos</button>
+                <button class="menu-tab mx-2 mb-4 px-6 py-2 rounded-full font-medium" data-category="sushi">Sushi</button>
+                <button class="menu-tab mx-2 mb-4 px-6 py-2 rounded-full font-medium" data-category="pizza">Pizza</button>
+                <button class="menu-tab mx-2 mb-4 px-6 py-2 rounded-full font-medium" data-category="bebidas">Bebidas</button>
+            </div>
+            
+            <!-- Menu Items -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menuItems">
+                <!-- Sushi Items -->
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="sushi">
+                    <img src="/placeholder.svg?height=250&width=400&text=California+Roll" alt="California Roll" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">California Roll</h3>
+                            <span class="text-purple-600 font-bold">$8.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Delicioso roll con aguacate, pepino y cangrejo.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="1" 
+                                data-name="California Roll" 
+                                data-price="8.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=California+Roll">
+                            Añadir al Carrito
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn primary">Registrarse</button>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="sushi">
+                    <img src="/placeholder.svg?height=250&width=400&text=Tempura+Roll" alt="Tempura Roll" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Tempura Roll</h3>
+                            <span class="text-purple-600 font-bold">$10.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Roll con camarones tempura, aguacate y salsa especial.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="2" 
+                                data-name="Tempura Roll" 
+                                data-price="10.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Tempura+Roll">
+                            Añadir al Carrito
+                        </button>
+                    </div>
                 </div>
-                <p>¿Ya tienes una cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="sushi">
+                    <img src="/placeholder.svg?height=250&width=400&text=Dragon+Roll" alt="Dragon Roll" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Dragon Roll</h3>
+                            <span class="text-purple-600 font-bold">$12.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Espectacular roll con anguila, aguacate y tobiko.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="3" 
+                                data-name="Dragon Roll" 
+                                data-price="12.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Dragon+Roll">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Pizza Items -->
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="pizza">
+                    <img src="/placeholder.svg?height=250&width=400&text=Margherita" alt="Pizza Margherita" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Pizza Margherita</h3>
+                            <span class="text-purple-600 font-bold">$11.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Clásica pizza con salsa de tomate, mozzarella y albahaca fresca.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="4" 
+                                data-name="Pizza Margherita" 
+                                data-price="11.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Margherita">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="pizza">
+                    <img src="/placeholder.svg?height=250&width=400&text=Pepperoni" alt="Pizza Pepperoni" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Pizza Pepperoni</h3>
+                            <span class="text-purple-600 font-bold">$13.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Deliciosa pizza con abundante pepperoni y queso mozzarella.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="5" 
+                                data-name="Pizza Pepperoni" 
+                                data-price="13.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Pepperoni">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="pizza">
+                    <img src="/placeholder.svg?height=250&width=400&text=Hawaiana" alt="Pizza Hawaiana" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Pizza Hawaiana</h3>
+                            <span class="text-purple-600 font-bold">$12.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Pizza con jamón, piña y extra queso mozzarella.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="6" 
+                                data-name="Pizza Hawaiana" 
+                                data-price="12.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Hawaiana">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Bebidas Items -->
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="bebidas">
+                    <img src="/placeholder.svg?height=250&width=400&text=Limonada" alt="Limonada Fresca" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Limonada Fresca</h3>
+                            <span class="text-purple-600 font-bold">$3.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Refrescante limonada natural con un toque de menta.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="7" 
+                                data-name="Limonada Fresca" 
+                                data-price="3.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Limonada">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="bebidas">
+                    <img src="/placeholder.svg?height=250&width=400&text=Mojito" alt="Mojito" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Mojito</h3>
+                            <span class="text-purple-600 font-bold">$6.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Clásico cóctel con ron, lima, menta y azúcar.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="8" 
+                                data-name="Mojito" 
+                                data-price="6.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Mojito">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-item bg-white rounded-xl shadow-md overflow-hidden" data-category="bebidas">
+                    <img src="/placeholder.svg?height=250&width=400&text=Agua+Mineral" alt="Agua Mineral" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Agua Mineral</h3>
+                            <span class="text-purple-600 font-bold">$1.99</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Agua mineral refrescante con o sin gas.</p>
+                        <button class="add-to-cart bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300" 
+                                data-id="9" 
+                                data-name="Agua Mineral" 
+                                data-price="1.99" 
+                                data-image="/placeholder.svg?height=250&width=400&text=Agua+Mineral">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <img src="/placeholder.svg?height=600&width=800&text=Nuestro+Equipo" alt="Nuestro Equipo" class="rounded-xl shadow-lg w-full">
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Sobre Nosotros</h2>
+                    <p class="text-gray-600 mb-4">En FoodExpress, nos apasiona ofrecer la mejor experiencia culinaria directamente a tu hogar. Nuestro equipo de chefs expertos prepara cada plato con ingredientes frescos y de la más alta calidad.</p>
+                    <p class="text-gray-600 mb-6">Fundada en 2020, nuestra misión es hacer que la comida gourmet sea accesible para todos, sin comprometer la calidad ni el sabor. Nos enorgullece ofrecer un servicio rápido y confiable, para que puedas disfrutar de tus platos favoritos en la comodidad de tu hogar.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-utensils text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Ingredientes Frescos</h3>
+                                <p class="text-gray-600 text-sm">Calidad garantizada</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-truck text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Entrega Rápida</h3>
+                                <p class="text-gray-600 text-sm">En menos de 30 minutos</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-star text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Chefs Expertos</h3>
+                                <p class="text-gray-600 text-sm">Profesionales calificados</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-heart text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Hecho con Amor</h3>
+                                <p class="text-gray-600 text-sm">Pasión por la cocina</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Lo que dicen nuestros clientes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/placeholder.svg?height=50&width=50" alt="Cliente" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800">María González</h3>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"La mejor pizza que he probado en mucho tiempo. La masa es perfecta y los ingredientes son frescos. Definitivamente volveré a pedir."</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/placeholder.svg?height=50&width=50" alt="Cliente" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800">Carlos Rodríguez</h3>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"El sushi llegó perfectamente presentado y fresco. La entrega fue rápida y el servicio al cliente excelente. Recomendado al 100%."</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/placeholder.svg?height=50&width=50" alt="Cliente" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800">Laura Martínez</h3>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Los cócteles son increíbles, especialmente el mojito. Pedí comida y bebidas para una reunión y todos quedaron encantados. ¡Gracias FoodExpress!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Contáctanos</h2>
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2">
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-gray-700 font-medium mb-2">Nombre</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 font-medium mb-2">Mensaje</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                            Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+                <div class="lg:w-1/2">
+                    <div class="bg-gray-100 p-8 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">Información de Contacto</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-map-marker-alt text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Dirección</h4>
+                                    <p class="text-gray-600">Av. Principal 123, Ciudad</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-phone text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Teléfono</h4>
+                                    <p class="text-gray-600">+1 234 567 890</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-envelope text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Email</h4>
+                                    <p class="text-gray-600">info@foodexpress.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-clock text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Horario</h4>
+                                    <p class="text-gray-600">Lunes a Domingo: 11:00 AM - 10:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="font-bold text-gray-800 mb-3">Síguenos</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="bg-purple-100 p-3 rounded-full text-purple-600 hover:bg-purple-200 transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="bg-purple-100 p-3 rounded-full text-purple-600 hover:bg-purple-200 transition duration-300">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="bg-purple-100 p-3 rounded-full text-purple-600 hover:bg-purple-200 transition duration-300">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="bg-purple-100 p-3 rounded-full text-purple-600 hover:bg-purple-200 transition duration-300">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">FoodExpress</h3>
+                    <p class="text-gray-400 mb-4">Deliciosa comida a un clic de distancia. Disfruta de los mejores sushi, pizzas y bebidas con entrega rápida.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Enlaces Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Inicio</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-white transition duration-300">Menú</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">Nosotros</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Categorías</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#sushi" class="text-gray-400 hover:text-white transition duration-300">Sushi</a></li>
+                        <li><a href="#pizza" class="text-gray-400 hover:text-white transition duration-300">Pizza</a></li>
+                        <li><a href="#bebidas" class="text-gray-400 hover:text-white transition duration-300">Bebidas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Boletín</h3>
+                    <p class="text-gray-400 mb-4">Suscríbete para recibir ofertas especiales y novedades.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Tu email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none">
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 FoodExpress. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                <button id="closeLoginModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label for="loginEmail" class="block text-gray-700 font-medium mb-2">Email</label>
+                    <input type="email" id="loginEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-gray-700 font-medium mb-2">Contraseña</label>
+                    <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                </div>
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition duration-300">
+                    Iniciar Sesión
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <p class="text-gray-600">¿No tienes una cuenta? <a href="#" class="text-purple-600 font-medium">Regístrate</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Finalizar Pedido</h2>
+                <button id="closeCheckoutModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="checkoutForm" class="space-y-4">
+                <div>
+                    <label for="checkoutName" class="block text-gray-700 font-medium mb-2">Nombre Completo</label>
+                    <input type="text" id="checkoutName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="checkoutPhone" class="block text-gray-700 font-medium mb-2">Teléfono</label>
+                    <input type="tel" id="checkoutPhone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="checkoutAddress" class="block text-gray-700 font-medium mb-2">Dirección de Entrega</label>
+                    <input type="text" id="checkoutAddress" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="checkoutPayment" class="block text-gray-700 font-medium mb-2">Método de Pago</label>
+                    <select id="checkoutPayment" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                        <option value="">Seleccionar método de pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="checkoutTip" class="mr-2">
+                    <label for="checkoutTip" class="text-gray-700">Añadir propina (10%)</label>
+                </div>
+                <div class="border-t pt-4">
+                    <div class="flex justify-between font-bold text-gray-800 mb-2">
+                        <span>Subtotal:</span>
+                        <span id="checkoutSubtotal">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600 mb-2 hidden" id="tipContainer">
+                        <span>Propina (10%):</span>
+                        <span id="checkoutTipAmount">$0.00</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-gray-800 text-lg">
+                        <span>Total:</span>
+                        <span id="checkoutTotal">$0.00</span>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition duration-300">
+                    Confirmar Pedido
+                </button>
             </form>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Order Confirmation Modal -->
+    <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full text-center">
+            <div class="mb-6">
+                <div class="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-green-500 text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mt-4">¡Pedido Confirmado!</h2>
+                <p class="text-gray-600 mt-2">Tu pedido ha sido recibido y está siendo procesado.</p>
+            </div>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <div class="text-left mb-2">
+                    <span class="font-bold text-gray-800">Número de Pedido:</span>
+                    <span id="orderNumber" class="text-gray-600"></span>
+                </div>
+                <div class="text-left mb-2">
+                    <span class="font-bold text-gray-800">Tiempo Estimado de Entrega:</span>
+                    <span class="text-gray-600">30-45 minutos</span>
+                </div>
+            </div>
+            <button id="closeConfirmationModal" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition duration-300">
+                Volver al Inicio
+            </button>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

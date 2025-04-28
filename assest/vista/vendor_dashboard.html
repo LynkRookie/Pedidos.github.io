@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Vendedor - FoodExpress</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/vendor-dashboard.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center">
+                <img src="/placeholder.svg?height=40&width=40" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold text-gray-800">FoodExpress</h1>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="text-gray-600 hover:text-purple-600 transition duration-300">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Vendedor" class="h-10 w-10 rounded-full">
+                        <span class="text-gray-700 font-medium hidden md:block">Carlos Rodríguez</span>
+                        <i class="fas fa-chevron-down text-gray-500"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-user mr-2"></i> Mi Perfil
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-cog mr-2"></i> Configuración
+                        </a>
+                        <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md h-screen sticky top-0 hidden md:block">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Panel de Vendedor</h2>
+                <nav class="space-y-2">
+                    <a href="#" class="sidebar-link active flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Pedidos Nuevos</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-tasks"></i>
+                        <span>Pedidos en Proceso</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Pedidos Completados</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-history"></i>
+                        <span>Historial</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reportes</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                    </a>
+                    <a href="login.html" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard -->
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard de Vendedor</h1>
+                <p class="text-gray-600">Bienvenido, Carlos. Aquí puedes gestionar los pedidos.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-shopping-bag text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Pedidos Nuevos</h3>
+                            <p class="text-2xl font-bold text-gray-800">3</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-tasks text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">En Proceso</h3>
+                            <p class="text-2xl font-bold text-gray-800">5</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Completados Hoy</h3>
+                            <p class="text-2xl font-bold text-gray-800">12</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Ventas del Día</h3>
+                            <p class="text-2xl font-bold text-gray-800">$458.90</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Orders Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Pedidos Nuevos</h2>
+                    <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todos</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Pedido #</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Cliente</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Teléfono</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Productos</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Total</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Propina</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12350</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">María González</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">+1 234 567 890</td>
+                                <td class="py-3 px-4 text-gray-600">2x California Roll, 1x Mojito</td>
+                                <td class="py-3 px-4 text-gray-800">$25.97</td>
+                                <td class="py-3 px-4 text-green-600">Sí ($2.60)</td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm mr-2">
+                                        Aceptar
+                                    </button>
+                                    <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Rechazar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12351</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Juan Pérez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">+1 987 654 321</td>
+                                <td class="py-3 px-4 text-gray-600">1x Pizza Pepperoni, 2x Agua Mineral</td>
+                                <td class="py-3 px-4 text-gray-800">$17.97</td>
+                                <td class="py-3 px-4 text-red-600">No</td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm mr-2">
+                                        Aceptar
+                                    </button>
+                                    <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Rechazar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12352</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Ana Martínez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">+1 555 123 456</td>
+                                <td class="py-3 px-4 text-gray-600">2x Dragon Roll, 1x Tempura Roll, 1x Limonada</td>
+                                <td class="py-3 px-4 text-gray-800">$36.96</td>
+                                <td class="py-3 px-4 text-green-600">Sí ($3.70)</td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm mr-2">
+                                        Aceptar
+                                    </button>
+                                    <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Rechazar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Processing Orders Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Pedidos en Proceso</h2>
+                    <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todos</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Pedido #</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Cliente</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Dirección</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Productos</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Estado</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12348</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Roberto Sánchez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Calle Principal 123, Ciudad</td>
+                                <td class="py-3 px-4 text-gray-600">1x Pizza Hawaiana, 1x Limonada</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Preparando</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Listo para Entrega
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12349</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Laura Gómez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Av. Central 456, Ciudad</td>
+                                <td class="py-3 px-4 text-gray-600">3x California Roll, 2x Agua Mineral</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">En Camino</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Marcar Entregado
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12347</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Pedro Ramírez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Calle Norte 789, Ciudad</td>
+                                <td class="py-3 px-4 text-gray-600">1x Pizza Pepperoni, 1x Mojito</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Esperando Repartidor</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">
+                                        Asignar Repartidor
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script  src="../js/vendor-dashboard.js"></script>
+
+    <script>
+        // For demo purposes - no actual functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.createElement('button');
+            menuToggle.className = 'md:hidden fixed bottom-4 right-4 bg-purple-600 text-white p-3 rounded-full shadow-lg z-50';
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.appendChild(menuToggle);
+            
+            menuToggle.addEventListener('click', function() {
+                const sidebar = document.querySelector('aside');
+                sidebar.classList.toggle('hidden');
+                sidebar.classList.toggle('fixed');
+                sidebar.classList.toggle('inset-0');
+                sidebar.classList.toggle('z-40');
+            });
+        });
+    </script>
+</body>
+</html>

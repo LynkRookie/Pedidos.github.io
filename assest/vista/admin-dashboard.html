@@ -3,201 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administrador - Sushi Express</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Sushi Express - Panel de Administrador</h1>
-            <div class="user-info">
-                <span id="adminName">Administrador</span>
-                <button id="logoutBtn" class="btn small">Cerrar Sesión</button>
-            </div>
-        </header>
-
-        <div class="dashboard admin-dashboard">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="salesSummary">Resumen de Ventas</button>
-                <button class="tab-btn" data-tab="userActivity">Actividad de Usuarios</button>
-                <button class="tab-btn" data-tab="manageUsers">Gestionar Usuarios</button>
-            </div>
-
-            <div id="salesSummary" class="tab-content active">
-                <h2>Resumen de Ventas</h2>
-                
-                <div class="date-filter">
-                    <label for="dateRange">Filtrar por fecha:</label>
-                    <select id="dateRange">
-                        <option value="today">Hoy</option>
-                        <option value="yesterday">Ayer</option>
-                        <option value="week">Esta semana</option>
-                        <option value="month">Este mes</option>
-                        <option value="custom">Personalizado</option>
-                    </select>
-                    <div id="customDateRange" class="custom-date-range">
-                        <input type="date" id="startDate">
-                        <span>hasta</span>
-                        <input type="date" id="endDate">
-                        <button id="applyDateFilter" class="btn small">Aplicar</button>
-                    </div>
-                </div>
-                
-                <div class="summary-cards">
-                    <div class="summary-card">
-                        <h3>Total de Ventas</h3>
-                        <p id="totalSales">$0.00</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Pedidos Completados</h3>
-                        <p id="completedOrders">0</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Propinas Recibidas</h3>
-                        <p id="totalTips">$0.00</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Promedio por Pedido</h3>
-                        <p id="averageOrder">$0.00</p>
-                    </div>
-                </div>
-                
-                <div class="sales-chart-container">
-                    <h3>Ventas por Día</h3>
-                    <canvas id="salesChart"></canvas>
-                </div>
-                
-                <div class="popular-items">
-                    <h3>Productos Más Vendidos</h3>
-                    <table id="popularItemsTable">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Los productos más vendidos se agregarán dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="userActivity" class="tab-content">
-                <h2>Actividad de Usuarios</h2>
-                
-                <div class="date-filter">
-                    <label for="activityDateRange">Filtrar por fecha:</label>
-                    <select id="activityDateRange">
-                        <option value="today">Hoy</option>
-                        <option value="yesterday">Ayer</option>
-                        <option value="week">Esta semana</option>
-                        <option value="month">Este mes</option>
-                        <option value="custom">Personalizado</option>
-                    </select>
-                    <div id="activityCustomDateRange" class="custom-date-range">
-                        <input type="date" id="activityStartDate">
-                        <span>hasta</span>
-                        <input type="date" id="activityEndDate">
-                        <button id="applyActivityDateFilter" class="btn small">Aplicar</button>
-                    </div>
-                </div>
-                
-                <div class="user-activity-table">
-                    <table id="userActivityTable">
-                        <thead>
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Correo</th>
-                                <th>Último Acceso</th>
-                                <th>Pedidos Realizados</th>
-                                <th>Total Gastado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- La actividad de usuarios se agregará dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="manageUsers" class="tab-content">
-                <h2>Gestionar Usuarios</h2>
-                
-                <div class="user-management">
-                    <div class="user-filter">
-                        <input type="text" id="userSearchInput" placeholder="Buscar usuario...">
-                        <select id="userRoleFilter">
-                            <option value="all">Todos los roles</option>
-                            <option value="user">Clientes</option>
-                            <option value="vendor">Vendedores</option>
-                            <option value="admin">Administradores</option>
-                        </select>
-                    </div>
-                    
-                    <table id="usersTable">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Rol</th>
-                                <th>Fecha de Registro</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Los usuarios se agregarán dinámicamente -->
-                        </tbody>
-                    </table>
-                    
-                    <button id="addUserBtn" class="btn primary">Agregar Usuario</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="userFormModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="userFormTitle">Agregar Usuario</h2>
-            <form id="userForm">
-                <div class="form-group">
-                    <label for="userName">Nombre Completo</label>
-                    <input type="text" id="userName" required>
-                </div>
-                <div class="form-group">
-                    <label for="userEmail">Correo Electrónico</label>
-                    <input type="email" id="userEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="userPhone">Número Telefónico</label>
-                    <input type="tel" id="userPhone" required>
-                </div>
-                <div class="form-group">
-                    <label for="userAddress">Dirección</label>
-                    <textarea id="userAddress" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="userRole">Rol</label>
-                    <select id="userRole" required>
-                        <option value="user">Cliente</option>
-                        <option value="vendor">Vendedor</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="userPassword">Contraseña</label>
-                    <input type="password" id="userPassword" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <title>Panel de Administrador - FoodExpress</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="admin-dashboard.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center">
+                <img src="/placeholder.svg?height=40&width=40" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold text-gray-800">FoodExpress</h1>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="text-gray-600 hover:text-purple-600 transition duration-300">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                    </button>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Administrador" class="h-10 w-10 rounded-full">
+                        <span class="text-gray-700 font-medium hidden md:block">Ana Martínez</span>
+                        <i class="fas fa-chevron-down text-gray-500"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-user mr-2"></i> Mi Perfil
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-cog mr-2"></i> Configuración
+                        </a>
+                        <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md h-screen sticky top-0 hidden md:block">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Panel de Administrador</h2>
+                <nav class="space-y-2">
+                    <a href="#" class="sidebar-link active flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Vendedores</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-utensils"></i>
+                        <span>Productos</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Pedidos</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Estadísticas</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                    </a>
+                    <a href="login.html" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard -->
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard de Administrador</h1>
+                <p class="text-gray-600">Bienvenida, Ana. Aquí puedes ver el rendimiento general del sistema.</p>
+            </div>
+
+            <!-- Date Filter -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-wrap items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h3 class="font-bold text-gray-800">Filtrar por fecha:</h3>
+                    <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        <option>Hoy</option>
+                        <option>Ayer</option>
+                        <option>Últimos 7 días</option>
+                        <option>Este mes</option>
+                        <option>Mes pasado</option>
+                        <option>Personalizado</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                        <i class="fas fa-download mr-2"></i> Exportar Reporte
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-shopping-bag text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Pedidos Totales</h3>
+                            <p class="text-2xl font-bold text-gray-800">1,254</p>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-up"></i> 12% vs mes anterior</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Usuarios Activos</h3>
+                            <p class="text-2xl font-bold text-gray-800">3,872</p>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-up"></i> 8% vs mes anterior</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Ingresos Totales</h3>
+                            <p class="text-2xl font-bold text-gray-800">$24,582</p>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-up"></i> 15% vs mes anterior</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-star text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Calificación Promedio</h3>
+                            <p class="text-2xl font-bold text-gray-800">4.8/5</p>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-up"></i> 0.2 vs mes anterior</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Sales Chart -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Ventas por Categoría</h2>
+                    <div class="h-80">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Orders Chart -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Pedidos por Día</h2>
+                    <div class="h-80">
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Activity Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Actividad de Usuarios</h2>
+                    <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todos</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Usuario</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Rol</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Último Acceso</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Pedidos</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Gasto Total</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Usuario" class="h-8 w-8 rounded-full mr-2">
+                                        <div>
+                                            <span class="block text-gray-800">Juan Pérez</span>
+                                            <span class="text-gray-500 text-sm">juan@email.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Cliente</td>
+                                <td class="py-3 px-4 text-gray-600">Hoy, 10:23 AM</td>
+                                <td class="py-3 px-4 text-gray-800">24</td>
+                                <td class="py-3 px-4 text-gray-800">$458.90</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Usuario" class="h-8 w-8 rounded-full mr-2">
+                                        <div>
+                                            <span class="block text-gray-800">María González</span>
+                                            <span class="text-gray-500 text-sm">maria@email.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Cliente</td>
+                                <td class="py-3 px-4 text-gray-600">Ayer, 3:45 PM</td>
+                                <td class="py-3 px-4 text-gray-800">18</td>
+                                <td class="py-3 px-4 text-gray-800">$325.50</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Usuario" class="h-8 w-8 rounded-full mr-2">
+                                        <div>
+                                            <span class="block text-gray-800">Carlos Rodríguez</span>
+                                            <span class="text-gray-500 text-sm">carlos@email.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Vendedor</td>
+                                <td class="py-3 px-4 text-gray-600">Hoy, 9:15 AM</td>
+                                <td class="py-3 px-4 text-gray-800">-</td>
+                                <td class="py-3 px-4 text-gray-800">-</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Usuario" class="h-8 w-8 rounded-full mr-2">
+                                        <div>
+                                            <span class="block text-gray-800">Laura Martínez</span>
+                                            <span class="text-gray-500 text-sm">laura@email.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Cliente</td>
+                                <td class="py-3 px-4 text-gray-600">Hace 3 días</td>
+                                <td class="py-3 px-4 text-gray-800">7</td>
+                                <td class="py-3 px-4 text-gray-800">$142.75</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Inactivo</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Sales Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Ventas Recientes</h2>
+                    <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todas</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Pedido #</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Cliente</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Vendedor</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Fecha</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Total</th>
+                                <th class="text-left py-3 px-4 text-gray-600 font-medium">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12345</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Juan Pérez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Carlos Rodríguez</td>
+                                <td class="py-3 px-4 text-gray-600">Hoy, 10:23 AM</td>
+                                <td class="py-3 px-4 text-gray-800">$35.99</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Completado</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12346</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">María González</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Carlos Rodríguez</td>
+                                <td class="py-3 px-4 text-gray-600">Hoy, 9:45 AM</td>
+                                <td class="py-3 px-4 text-gray-800">$42.50</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">En Proceso</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12347</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Roberto Sánchez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Carlos Rodríguez</td>
+                                <td class="py-3 px-4 text-gray-600">Ayer, 3:30 PM</td>
+                                <td class="py-3 px-4 text-gray-800">$28.75</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Completado</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 text-gray-800">#12348</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <img src="/placeholder.svg?height=30&width=30" alt="Cliente" class="h-8 w-8 rounded-full mr-2">
+                                        <span class="text-gray-800">Ana Martínez</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-600">Carlos Rodríguez</td>
+                                <td class="py-3 px-4 text-gray-600">Ayer, 2:15 PM</td>
+                                <td class="py-3 px-4 text-gray-800">$36.96</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Completado</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script  src="../js/admin-dashboard.js"></script>
+
+    <script>
+        // For demo purposes - Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sales by Category Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(salesCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Sushi', 'Pizza', 'Bebidas'],
+                    datasets: [{
+                        data: [45, 35, 20],
+                        backgroundColor: [
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(139, 92, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Orders by Day Chart
+            const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+            const ordersChart = new Chart(ordersCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                    datasets: [{
+                        label: 'Pedidos',
+                        data: [65, 59, 80, 81, 56, 95, 40],
+                        fill: false,
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Mobile menu toggle
+            const menuToggle = document.createElement('button');
+            menuToggle.className = 'md:hidden fixed bottom-4 right-4 bg-purple-600 text-white p-3 rounded-full shadow-lg z-50';
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.appendChild(menuToggle);
+            
+            menuToggle.addEventListener('click', function() {
+                const sidebar = document.querySelector('aside');
+                sidebar.classList.toggle('hidden');
+                sidebar.classList.toggle('fixed');
+                sidebar.classList.toggle('inset-0');
+                sidebar.classList.toggle('z-40');
+            });
+        });
+    </script>
 </body>
 </html>

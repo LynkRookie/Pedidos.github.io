@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Usuario - FoodExpress</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/user-dashboard.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center">
+                <img src="/placeholder.svg?height=40&width=40" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold text-gray-800">FoodExpress</h1>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-gray-600 hover:text-purple-600 transition duration-300">
+                    <i class="fas fa-bell text-xl"></i>
+                </a>
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Usuario" class="h-10 w-10 rounded-full">
+                        <span class="text-gray-700 font-medium hidden md:block">Juan Pérez</span>
+                        <i class="fas fa-chevron-down text-gray-500"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-user mr-2"></i> Mi Perfil
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-cog mr-2"></i> Configuración
+                        </a>
+                        <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="md:w-1/4">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <img src="/placeholder.svg?height=60&width=60" alt="Usuario" class="h-16 w-16 rounded-full">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Juan Pérez</h2>
+                            <p class="text-gray-600">usuario@email.com</p>
+                        </div>
+                    </div>
+                    <nav class="space-y-2">
+                        <a href="#" class="sidebar-link active flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-utensils"></i>
+                            <span>Mis Pedidos</span>
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Direcciones</span>
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Métodos de Pago</span>
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <a href="login.html" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Dashboard -->
+            <div class="md:w-3/4">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Bienvenido, Juan</h2>
+                    <p class="text-gray-600 mb-6">¿Qué te gustaría ordenar hoy?</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <a href="/" class="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg flex items-center space-x-3 transition duration-300">
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-utensils text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Ordenar Ahora</h3>
+                                <p class="text-gray-600 text-sm">Explora nuestro menú</p>
+                            </div>
+                        </a>
+                        <a href="#" class="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg flex items-center space-x-3 transition duration-300">
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-history text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Pedidos Recientes</h3>
+                                <p class="text-gray-600 text-sm">Ver historial</p>
+                            </div>
+                        </a>
+                        <a href="#" class="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg flex items-center space-x-3 transition duration-300">
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-heart text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Favoritos</h3>
+                                <p class="text-gray-600 text-sm">Tus platos preferidos</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Recent Orders -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Pedidos Recientes</h2>
+                        <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todos</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-3 px-4 text-gray-600 font-medium">Pedido #</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 font-medium">Fecha</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 font-medium">Total</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 font-medium">Estado</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 font-medium">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="py-3 px-4 text-gray-800">#12345</td>
+                                    <td class="py-3 px-4 text-gray-600">23/04/2023</td>
+                                    <td class="py-3 px-4 text-gray-800">$35.99</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium status-completed">Entregado</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="#" class="text-purple-600 hover:text-purple-800 mr-3">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="text-purple-600 hover:text-purple-800">
+                                            <i class="fas fa-redo-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="py-3 px-4 text-gray-800">#12346</td>
+                                    <td class="py-3 px-4 text-gray-600">20/04/2023</td>
+                                    <td class="py-3 px-4 text-gray-800">$42.50</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium status-completed">Entregado</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="#" class="text-purple-600 hover:text-purple-800 mr-3">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="text-purple-600 hover:text-purple-800">
+                                            <i class="fas fa-redo-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-3 px-4 text-gray-800">#12347</td>
+                                    <td class="py-3 px-4 text-gray-600">15/04/2023</td>
+                                    <td class="py-3 px-4 text-gray-800">$28.75</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium status-completed">Entregado</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="#" class="text-purple-600 hover:text-purple-800 mr-3">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="text-purple-600 hover:text-purple-800">
+                                            <i class="fas fa-redo-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Favorite Items -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Tus Favoritos</h2>
+                        <a href="#" class="text-purple-600 hover:text-purple-800 transition duration-300">Ver todos</a>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <img src="/placeholder.svg?height=150&width=300&text=California+Roll" alt="California Roll" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-gray-800">California Roll</h3>
+                                    <span class="text-purple-600 font-bold">$8.99</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Delicioso roll con aguacate, pepino y cangrejo.</p>
+                                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition duration-300">
+                                    Ordenar de Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <img src="/placeholder.svg?height=150&width=300&text=Pizza+Pepperoni" alt="Pizza Pepperoni" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-gray-800">Pizza Pepperoni</h3>
+                                    <span class="text-purple-600 font-bold">$13.99</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Deliciosa pizza con abundante pepperoni y queso mozzarella.</p>
+                                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition duration-300">
+                                    Ordenar de Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <img src="/placeholder.svg?height=150&width=300&text=Mojito" alt="Mojito" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-gray-800">Mojito</h3>
+                                    <span class="text-purple-600 font-bold">$6.99</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Clásico cóctel con ron, lima, menta y azúcar.</p>
+                                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition duration-300">
+                                    Ordenar de Nuevo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-600">&copy; 2023 FoodExpress. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script  src="../js/user-dashboard.js"></script>
+
+    <script>
+        // For demo purposes - no actual functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add status colors
+            document.querySelectorAll('.status-pending').forEach(el => {
+                el.classList.add('bg-yellow-100', 'text-yellow-800');
+            });
+            
+            document.querySelectorAll('.status-processing').forEach(el => {
+                el.classList.add('bg-blue-100', 'text-blue-800');
+            });
+            
+            document.querySelectorAll('.status-completed').forEach(el => {
+                el.classList.add('bg-green-100', 'text-green-800');
+            });
+            
+            document.querySelectorAll('.status-cancelled').forEach(el => {
+                el.classList.add('bg-red-100', 'text-red-800');
+            });
+        });
+    </script>
+</body>
+</html>
